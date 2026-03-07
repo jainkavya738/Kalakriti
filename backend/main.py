@@ -26,8 +26,9 @@ async def lifespan(app: FastAPI):
         await create_tables()
         logger.info("✅ Database tables created / verified")
     except Exception as e:
-        logger.error(f"⚠️ Could not create/verify database tables: {e}")
-        logger.error("The app will start, but database operations may fail.")
+        logger.exception(f"⚠️ Could not create/verify database tables: {e}")
+        logger.error("Failed to connect to the database or create tables. Exiting.")
+        raise  # Re-raise to fail fast and prevent app from running in invalid state
 
     logger.info("✅ Kala-Kriti Backend is ready!")
     yield
